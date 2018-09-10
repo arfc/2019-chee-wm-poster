@@ -1,0 +1,57 @@
+\documentclass[11pt,letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{caption} % for table captions
+\usepackage{amsmath} % for multi-line equations and piecewises
+\usepackage{graphicx}
+%\usepackage{textcomp}
+\usepackage{xspace}
+\usepackage{verbatim} % for block comments
+%\usepackage{subfig} % for subfigures
+\usepackage{enumitem} % for a) b) c) lists
+\newcommand{\Cyclus}{\textsc{Cyclus}\xspace}%
+\newcommand{\Cycamore}{\textsc{Cycamore}\xspace}%
+\usepackage{tabularx}
+\usepackage{color}
+\usepackage{setspace}
+\definecolor{bg}{rgb}{0.95,0.95,0.95}
+\newcolumntype{b}{X}
+\newcolumntype{f}{>{\hsize=.15\hsize}X}
+\newcolumntype{s}{>{\hsize=.5\hsize}X}
+\newcolumntype{m}{>{\hsize=.75\hsize}X}
+\newcolumntype{r}{>{\hsize=1.1\hsize}X}
+\usepackage{titling}
+\usepackage[hang,flushmargin]{footmisc}
+\renewcommand*\footnoterule{}
+\usepackage[newfloat]{minted}
+\newenvironment{code}{\captionsetup{type=listing}}{}
+\SetupFloatingEnvironment{listing}{name=Code}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage{tikz}
+
+
+\usetikzlibrary{shapes.geometric,arrows}
+\tikzstyle{process} = [rectangle, rounded corners, minimum width=1cm, minimum height=1cm,text centered, draw=black, fill=blue!30]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+
+\graphicspath{{images/}}
+ 
+\title{Title
+        \\ \vspace{0.5em} WM Symposia Poster Abstract}
+\author{Gwendolyn J. Chee}
+
+
+\begin{document}
+	\maketitle
+	\hrule
+
+\section*{}
+\doublespacing
+The biggest barriers facing the nuclear waste management in U.S. are the political and social obstacles towards siting of a final waste repository site. From numerous studies [cite], it has been shown that permanent underground disposal of nuclear waste provides excellent isolation from the accessible environment [cite: Rechard]. Therefore, in expectation that the chosen method of long-term disposal of spent nuclear fuel is a deep geologic repository and that a site will be selected, this work aims to take a closer look at the logistical process of getting the spent nuclear fuel from the reactor sites to the final waste repository site and the method of loading of the spent nuclear fuel into the waste repository. This work is conducted using Cyclus, an agent-based fuel cycle simulation framework, where each facility in the fuel cycle is modeled as an agent. A conditioning facility agent and a Simple Heat-Limited Repository agent are created. The conditioning facility packages spent fuel assemblies into a waste canister that has user defined properties: radius length of layers, material thermal conductivity of each layer. The repository facility determines waste package loading strategy based on maximization of mass loading and the thermal limit constraint of the host geologic media. By pairing these tools with historic U.S. spent nuclear fuel data, a simulation of the real U.S. nuclear fuel cycle can be done and thus, assist in the decision making process for moving nuclear waste from reactor sites to their final resting place at a nuclear waste repository. 
+
+
+\end{document}
+
+
+
