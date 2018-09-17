@@ -36,7 +36,7 @@
 \section * {}
 \doublespacing
 The largest barriers facing nuclear waste management in the U.S. 
-are the political and social obstacles towards siting of a final 
+are the political and social obstacles towards siting a final 
 waste repository. 
 It has been shown that permanent underground disposal of nuclear 
 waste provides excellent isolation from the human-inhabited 
@@ -49,12 +49,22 @@ In this work, U.S. historical SNF inventory data
 different transfer and loading strategies for moving SNF from reactor 
 sites to a final waste repository.  
 First-in-first-out and last-in-first-out fuel allocation strategies 
-are considered. The goal of this work is to determine which strategy 
+are considered. 
+The goal of this work is to determine which strategy 
 best maximizes mass loading of the waste repository. 
-These simulations are performed using Cyclus, an agent-based fuel cycle simulation 
-framework, which means that each facility in the fuel cycle is modeled
-individually. For this work, a waste conditioning facility agent 
+These simulations are performed using Cyclus, an \textit{agent-based} 
+fuel cycle simulation framework. In Cyclus, each facility in 
+the fuel cycle is modeled individually and they interact with one another 
+as independent \textit{agents}. 
+For this work, a waste conditioning facility agent 
 and a simple heat-limited repository agent were created. 
+The conditioning facility packages spent fuel assemblies into a waste 
+canister that has user defined properties such as radius length and material 
+thermal conductivity. 
+The repository facility emplaces waste canisters by 
+maximizing mass loading while remaining below the thermal 
+limit of the host geologic media. 
+
 
 
 
