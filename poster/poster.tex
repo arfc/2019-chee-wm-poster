@@ -116,7 +116,7 @@
 \begin{alertblock}{Objectives}
 \begin{itemize}
         \item Create a \Cyclus Waste Conditioning Model that packages spent fuel 
-        bundles into canisters which have user-defined properties. 
+        bundles into packages which have user-defined properties. 
 		\item Create a \Cyclus Medium-Fidelity Repository Model that gives accurate 
 		time and spatial dependent temperature values and loads the repository
 		based on a user-selected loading strategy. 
@@ -129,21 +129,23 @@
 %----------------------------------------------------------------------------------------
 
 \begin{block}{Motivation}
-Previous work in studying repository loading have used spent fuel assemblies 
-that have an average burn up composition \cite{johnson_optimizing_2016} 
+Previous work in studying repository loading have used \gls{SNF} 
+with an average burn up composition \cite{johnson_optimizing_2016} 
 to evaluate the heat load in the repository \cite{greenberg_application_2012}.
-Instead of using average \gls{SNF} composition, this work aims to use \textbf{U.S. 
-historical SNF inventory data} \cite{peterson_unf_standards_2017} in various 
-simulations to study how waste acceptance strategies impact repository loading.
+This work aims to use \textbf{U.S. historical SNF inventory data} 
+\cite{peterson_unf_standards_2017} in various simulations to study how 
+waste acceptance strategies impact repository loading.
+
 The \gls{UDB} contains assembly-specific data including initial enrichment, 
 burnup, \gls{MTHM}, assembly type and discharge date \cite{peterson_fuel_2015}. 
 Irradiation and decay calculations using SCALE \cite{bowman_scale_2011} were 
-performed on each spent fuel assembly based on the previously mentioned 
-parameters in the collected data to obtain mass, heat, activity and isotopic 
-composition for each assembly \cite{peterson_additional_2017}. 
-This data is input into \Cyclus using the UDB reactor agent \cite{}. 
+performed on each spent fuel assembly based on the collected data to obtain 
+mass, heat, activity and isotopic composition for each assembly 
+\cite{peterson_additional_2017}. 
+
+This data is inputted into \Cyclus using the UDB reactor agent \cite{}. 
 \Cyclus is capable of tracking discrete isotopes and their time-dependent decay. 
-With these capabilities, we can more accurately study the dynamic loading 
+We can use these capabilities to more accurately study the dynamic loading 
 of a waste repository. 
 
 \end{block}
@@ -169,18 +171,21 @@ strategies impact repository loading.
 \end{block}
 
 \begin{block}{Waste Conditioning Model}
-	The waste conditioning model accepts spent fuel bundles and puts them into a cylindrical
-	waste canister. The model allows the user to define one or two canister material layers. 
+The waste conditioning model accepts spent fuel bundles and puts them into a cylindrical
+waste package. 
+The model allows the user to define multiple package material layers and 
+the thermal conductivity and diffusivity of each layer. 
 	
-	In the waste conditioning model, the user can define the variables:  
-		\begin{itemize}
-			\item Number of spent fuel bundles in each canister 
-			\item Thermal Conductivity of canister material layers 
-			\item Thermal Diffusivity of Canister 
-			\item Radius and height of Canister
-		\end{itemize}
+In the waste conditioning model, the user can define the variables:  
+	\begin{itemize}
+		\item Number of spent fuel bundles in each package 
+		\item Radius of each package material layer
+		\item Thermal Conductivity of each package material layer 
+		\item Thermal Diffusivity of each package material layer
+		\item Radius and height of package
+	\end{itemize}
 	
-	\end{block}
+\end{block}
 
 %----------------------------------------------------------------------------------------
 
@@ -197,13 +202,12 @@ strategies impact repository loading.
 %----------------------------------------------------------------------------------------
 
 \begin{block}{Waste Repository Model}
-The waste repository model accepts waste canisters and emplaces the canisters into 
+The waste repository model accepts waste packages and emplaces them into 
 available positions within the waste repository based on a thermal criteria. 
-If the thermal criteria is not met, the waste canister will be placed into a buffer 
-until it meets the thermal criteria.  
-The thermal criteria is set by the repository host geology. 
-It is the temperature limit applied at the interface between waste package surface 
-and the host geology. 
+If the thermal criteria is not met, the waste package will be placed into a buffer 
+until it meets the thermal criteria. 
+The thermal criteria is a defined temperature limit at the interface between waste 
+package surface and the host geology, that is set based on the repository's host geology.
 
 Table \ref{tab:temp_limit} shows the temperature limits, thermal conductivity 
 and thermal diffusivity for the host geology included in this study. 
@@ -223,7 +227,7 @@ and thermal diffusivity for the host geology included in this study.
 
 In the waste repository model, the user can define the variables: 
 	\begin{itemize}
-		\item Distance between waste canisters
+		\item Distance between waste packages
 		\item Distance between drifts 
 		\item Repository host geology 
 		\item Loading Strategy 
@@ -233,25 +237,30 @@ In the waste repository model, the user can define the variables:
 
 At each time step, the waste repository model recalculates the temperature at each 
 location in the repository after the addition of new waste packages. 
-To accurately determine the temperature in the repository, a the thermal model that 
-relies on a transient 'outside' model and quasi-steady-state 'inside' model is used. 
-[Reason for inside and outside model]
+If the addition of this new package results in its temperature being over the thermal 
+limit, it will be placed back into the buffer.  
+To accurately determine the temperature in the repository, a thermal model that 
+relies on a transient 'outside' model and quasi-steady-state 'inside' model is used
+\cite{sutton_investigations_2011}. 
 
 \textbf{Transient Outside Model}
 
-Figure \ref{fig:conceptual_layout} shows the conceptual layout of the central waste package 
-and the adjacent point and line sources. 
+The outside model assumes a homogenous medium with the \gls{EBS} replaced by the 
+geologic medium. 
+Figure \ref{fig:conceptual_layout} shows the conceptual layout of the central waste 
+package and the adjacent point and line sources. 
 
 \begin{figure}
 	\label{fig:conceptual_layout}
 	\includegraphics[width=0.9\linewidth]{outsidemodel}
-	\caption{Conceptual layout}
+	\caption{Outside Model: Conceptual layout of the central waste package, its adjacent
+	point sources and adjacent line sources \cite{sutton_investigations_2011}}
 \end{figure}
 
 Temperature solutions for the central waste package, adjacent point and line sources 
 are superimposed to calculate the temperature at specific points in the repository.
 The equations for calculating temperature of each contributing component 
-are included below. 
+are included below \cite{sutton_investigations_2011}. 
 
 The central drift consists of one finite line source which represents the central 
 waste package. 
@@ -269,8 +278,6 @@ The neighboring drifts are represented by infinite line sources.
 	T_{\infty line}(t,x,z) = \frac{1}{4\pi k} \int_0^t \frac{q_L(t')}{t-t'} e^{\frac{-(x^2+z^2)}{4\alpha (t-t')}} dt'
 \end{align*}
 
-\textbf{Quasi-steady-state 'inside' model}
-
 \end{block}
 
 
@@ -281,18 +288,34 @@ The neighboring drifts are represented by infinite line sources.
 \begin{column}{\sepwid}\end{column} % Empty spacer column
 
 \begin{column}{\onecolwid} % The third column
-	
-%----------------------------------------------------------------------------------------
-%	FUTURE WORK
-%----------------------------------------------------------------------------------------
 
-\begin{alertblock}{Future Work}
+\begin{block}{Waste Repository Model}
+\textbf{Quasi-steady-state 'inside' model}
+
+The inside model is considered to be at a quasi-steady-state condition since there is 
+relatively low thermal mass of \gls{EBS} compared to the infinite geologic medium 
+\cite{sutton_investigations_2011}. 
+The steady state calculation is performed at each time step with the heat source and 
+interface temperature as boundary conditions. 
+Figure \ref{fig:ebs_layers} shows an example of an \gls{EBS} layout.
+
+\begin{figure}
+	\label{fig:ebs_layers}
+	\includegraphics[width=0.9\linewidth]{ebs_layers}
+	\caption{Layers in an Engineering Barrier System \cite{sutton_investigations_2011}}
+\end{figure}
+
+\end{block}
 
 
-\end{alertblock}
-
-
-
+\begin{block}{Loading Strategies}
+Loading strategies that will be studied: 
+\begin{itemize}
+	\item First-in-first-out
+	\item Last-in-first-out
+	\item Load \gls{SNF} from shutdown sites first \cite{petersen_determining_2017}
+\end{itemize}
+\end{block}
 
 
 %----------------------------------------------------------------------------------------
