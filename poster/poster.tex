@@ -71,7 +71,8 @@
 
 \usepackage{booktabs} % Top and bottom rules for tables
 \usepackage{xspace}
-
+\usepackage{amsmath}
+\usepackage{bigints}
 
 \setbeamertemplate{bibliography item}[text]
 
@@ -114,10 +115,10 @@
 \setbeamercolor{block alerted body}{fg=black,bg=white} % Change the alert block body colors
 \begin{alertblock}{Objectives}
 \begin{itemize}
-        \item Create a \Cyclus Waste Conditioning Archetype that packages spent fuel 
+        \item Create a \Cyclus Waste Conditioning Model that packages spent fuel 
         bundles into canisters which have user-defined properties. 
-		\item Create a \Cyclus Medium-Fidelity Repository Archetype that gives accurate 
-		time and spatial dependent temperature calculations and loads the repository
+		\item Create a \Cyclus Medium-Fidelity Repository Model that gives accurate 
+		time and spatial dependent temperature values and loads the repository
 		based on a user-selected loading strategy. 
 \end{itemize}
 
@@ -134,6 +135,16 @@ to evaluate the heat load in the repository \cite{greenberg_application_2012}.
 Instead of using average \gls{SNF} composition, this work aims to use \textbf{U.S. 
 historical SNF inventory data} \cite{peterson_unf_standards_2017} in various 
 simulations to study how waste acceptance strategies impact repository loading.
+The \gls{UDB} contains assembly-specific data including initial enrichment, 
+burnup, \gls{MTHM}, assembly type and discharge date \cite{peterson_fuel_2015}. 
+Irradiation and decay calculations using SCALE \cite{bowman_scale_2011} were 
+performed on each spent fuel assembly based on the previously mentioned 
+parameters in the collected data to obtain mass, heat, activity and isotopic 
+composition for each assembly \cite{peterson_additional_2017}. 
+This data is input into \Cyclus using the UDB reactor agent \cite{}. 
+\Cyclus is capable of tracking discrete isotopes and their time-dependent decay. 
+With these capabilities, we can more accurately study the dynamic loading 
+of a waste repository. 
 
 \end{block}
 
@@ -142,17 +153,35 @@ simulations to study how waste acceptance strategies impact repository loading.
 %----------------------------------------------------------------------------------------
 
 \begin{block}{Cyclus}
-In \textsc{Cyclus}, each facility in the fuel cycle is modeled individually 
+\Cyclus is an agent-based extensible framework for modeling flow of material 
+through user-defined nuclear fuel cycles \cite{huff_fundamental_2016}. 
+In \Cyclus, each facility in the fuel cycle is modeled individually 
 and they interact with one another as independent \textit{agents}. 
-The goal of this work is to develop a waste conditioning \textit{agent} 
-and a waste repository \textit{agent} to provide \textsc{Cyclus} with 
-the capabilities to run these simulations. 
+The goal of this work is to develop a waste conditioning \textit{facility agent} 
+and a waste repository \textit{facility agent} to provide \Cyclus with 
+the capabilities to run simulations to study how waste acceptance 
+strategies impact repository loading. 
 \begin{figure}
 	\includegraphics[width=0.9\linewidth]{Cyclus_graph}
-	\caption{Cyclus API allows for modular build of simulations \cite{huff_2018}}
+	\caption{\Cyclus API allows for modular build of simulations \cite{huff_fundamental_2016}}
 \end{figure}
 
 \end{block}
+
+\begin{block}{Waste Conditioning Model}
+	The waste conditioning model accepts spent fuel bundles and puts them into a cylindrical
+	waste canister. The model allows the user to define one or two canister material layers. 
+	
+	In the waste conditioning model, the user can define the variables:  
+		\begin{itemize}
+			\item Number of spent fuel bundles in each canister 
+			\item Thermal Conductivity of canister material layers 
+			\item Thermal Diffusivity of Canister 
+			\item Radius and height of Canister
+		\end{itemize}
+	
+	\end{block}
+
 %----------------------------------------------------------------------------------------
 
 \end{column} % End of the first column
@@ -167,29 +196,83 @@ the capabilities to run these simulations.
 %	MODELS
 %----------------------------------------------------------------------------------------
 
-\begin{block}{Waste Conditioning Model}
-The waste conditioning model accepts spent fuel bundles and puts them into a cylindrical waste canister. 
-User-defined Variables: 
-\begin{itemize}
-	\item Number of spent fuel bundles in each canister 
-	\item Thermal Conductivity of Canister 
-	\item Thermal diffusivity of Canister 
-	\item Radius and height of Canister
-\end{itemize}
-\end{block}
-
 \begin{block}{Waste Repository Model}
-The waste repository model accepts
+The waste repository model accepts waste canisters and emplaces the canisters into 
+available positions within the waste repository based on a thermal criteria. 
+If the thermal criteria is not met, the waste canister will be placed into a buffer 
+until it meets the thermal criteria.  
+The thermal criteria is set by the repository host geology. 
+It is the temperature limit applied at the interface between waste package surface 
+and the host geology. 
 
-    
-%----------------------------------------------------------------------------------------
-%	PREVIOUS WORK
-%----------------------------------------------------------------------------------------
+Table \ref{tab:temp_limit} shows the temperature limits, thermal conductivity 
+and thermal diffusivity for the host geology included in this study. 
 
-\begin{block}{Archetype Design}
+\begin{table}[]
+	\label{tab:temp_limit}
+	\caption{Temperature limit at interface between waste package surface 
+	and each host geology \cite{sutton_investigations_2011}}
+	\begin{tabular}{|l|l|l|l|}
+	\hline
+	Rock Type & $T_{limit}$ [$^\circ$C] & k [$\frac{W}{mK}$] &  $\alpha$ [$\frac{m^2}{s}$]  \\ \hline
+	Granite   & 100 & 2.5  & 1.13\\ \hline
+	Clay      & 100 & 1.75 & 6.45\\ \hline
+	Salt      & 200 & 4.2  & 2.07\\ \hline
+	\end{tabular}
+\end{table}
 
+In the waste repository model, the user can define the variables: 
+	\begin{itemize}
+		\item Distance between waste canisters
+		\item Distance between drifts 
+		\item Repository host geology 
+		\item Loading Strategy 
+	\end{itemize}
+
+\textbf{Thermal Model}
+
+At each time step, the waste repository model recalculates the temperature at each 
+location in the repository after the addition of new waste packages. 
+To accurately determine the temperature in the repository, a the thermal model that 
+relies on a transient 'outside' model and quasi-steady-state 'inside' model is used. 
+[Reason for inside and outside model]
+
+\textbf{Transient Outside Model}
+
+Figure \ref{fig:conceptual_layout} shows the conceptual layout of the central waste package 
+and the adjacent point and line sources. 
+
+\begin{figure}
+	\label{fig:conceptual_layout}
+	\includegraphics[width=0.9\linewidth]{outsidemodel}
+	\caption{Conceptual layout}
+\end{figure}
+
+Temperature solutions for the central waste package, adjacent point and line sources 
+are superimposed to calculate the temperature at specific points in the repository.
+The equations for calculating temperature of each contributing component 
+are included below. 
+
+The central drift consists of one finite line source which represents the central 
+waste package. 
+\begin{align*}
+	T_{line}(t,x,y,z) &= \frac{1}{8 \pi k}  \int_{0}^{t} \frac{q_L(t')}{t-t'}e^{\frac{-(x^2+z^2)}{4\alpha(t-t')}} \\
+	&[erf[\frac{1}{2}\frac{y+L/2}{\sqrt{\alpha(t-t')}}]-erf[\frac{1}{2}\frac{y-L/2}{\sqrt{\alpha(t-t')}}]] dt'
+\end{align*}
+The central drift also consists of point sources that represent neighboring 
+waste packages in the central drift. 
+\begin{align*}
+	T_{point}(t,r) = \frac{1}{8 k \sqrt{\alpha} \pi^{3/2}} \int_{0}^{t}\frac{q(t')}{(t-t')^{3/2}}e^{\frac{-r^2}{4\alpha(t-t')}}dt'
+\end{align*}
+The neighboring drifts are represented by infinite line sources.  
+\begin{align*}
+	T_{\infty line}(t,x,z) = \frac{1}{4\pi k} \int_0^t \frac{q_L(t')}{t-t'} e^{\frac{-(x^2+z^2)}{4\alpha (t-t')}} dt'
+\end{align*}
+
+\textbf{Quasi-steady-state 'inside' model}
 
 \end{block}
+
 
 %----------------------------------------------------------------------------------------
 
@@ -209,11 +292,6 @@ The waste repository model accepts
 \end{alertblock}
 
 
-%--------------------------------------------------------
-% PROJECT TIMELINE
-%---------------------------------------------------------
-\begin{block}{Timeline}
-\end{block}
 
 
 
@@ -225,9 +303,9 @@ The waste repository model accepts
 
 \begin{block}{Acknowledgements}
 	
-	This research was performed using funding received
-	from the Consortium for Nonproliferation Enabling
-	Capabilities under award number 1-483313-973000-191100.
+	This research is being performed using funding received from the DOE Office
+	of Nuclear Energy's NEUP
+	(Project 16-10512) 'Demand-Driven Cycamore Archetypes'.
 	
 	
 \end{block}
@@ -243,8 +321,8 @@ The waste repository model accepts
 
 \begin{block}{References}
 
-        \footnotesize\bibliographystyle{abbrv} 
-        \bibliography{poster}
+	{\footnotesize\bibliographystyle{abbrv} 
+	\bibliography{poster}}
 \end{block}
 
 
