@@ -79,13 +79,24 @@
 %	TITLE SECTION 
 %----------------------------------------------------------------------------------------
 
-\title{
-	\includegraphics[width=0.3\linewidth]{UIUC_Logo}
-	\vspace{2cm}
-	\hspace{50cm}
-	\vspace{1cm}
-	Simulation of Spent Nuclear Fuel loading into a Final Waste Repository
-} % Poster title
+\title{%
+  \texorpdfstring{%
+    \makebox[\linewidth]{%
+      \makebox[0pt][l]{%
+        \raisebox{\dimexpr-\height+\baselineskip}[0pt][0pt]
+          {\includegraphics[height=2.5\baselineskip]{UIUC_Logo}}% Left logo
+      }\hfill
+      \makebox[0pt]{Simulation of Spent Nuclear Fuel loading}%
+      \hfill\makebox[0pt][r]{%
+        \raisebox{\dimexpr-\height+\baselineskip}[0pt][0pt]
+          {\includegraphics[height=3.3\baselineskip]{arfc_atom}}% Right logo
+      }%
+    }%
+  }
+  {Simulation of Spent Nuclear Fuel loading}
+  {into a Final Waste Repository}
+  {\vspace{1cm}}
+  } % Poster title
 
 \author{\textbf{Gwendolyn J. Chee}, Kathryn D. Huff}
 \institute{University of Illinios at Urbana-Champaign, Department of Nuclear, Plasma, and Radiological Engineering, Urbana, IL 61801}
