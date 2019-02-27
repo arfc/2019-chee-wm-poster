@@ -111,32 +111,31 @@
 %	MOTIVATION
 %----------------------------------------------------------------------------------------
 
-\begin{block}{Motivation}
-Previous work in studying repository loading have used \gls{SNF} 
-with an average burn up composition to evaluate the heat load in the repository 
-\cite{greenberg_application_2012,johnson_optimizing_2016}.
+\begin{block}{Introduction}
 
-Previously, a repository model (\textsc{Cyder}) was implemented in \Cyclus, however, 
-it is no longer compatible with the current \Cyclus and it used a lumped capacitance 
-thermal model. 
+\textbf{Previous Work}
 
-The goal of this work is to develop a spent fuel conditioning \textit{facility agent} 
-and a waste repository \textit{facility agent} to provide \Cyclus with 
-the capabilities to run simulations with U.S. historical SNF inventory data 
-\cite{peterson_unf_standards_2017}
-to more accurately study how waste package acceptance strategies impact repository loading. 
+Previous work towards studying repository loading have used: 
+\begin{itemize}
+	\item \gls{SNF} with an \textbf{average burnup composition} 
+	    \cite{greenberg_application_2012,johnson_optimizing_2016}
+	\item a \textbf{lumped capacitance thermal model} for calculating temperature 
+	      in a \Cyclus repository model \cite{huff_rapid_2017}
+\end{itemize}
 
-The UNF-ST$\&$DARDS \gls{UDB} contains assembly-specific data including initial enrichment, 
-burnup, \gls{MTHM}, assembly type and discharge date \cite{peterson_fuel_2015}. 
-Irradiation and decay calculations using SCALE \cite{bowman_scale_2011} were 
-performed on each spent fuel assembly based on the collected data to obtain 
-mass, heat, activity and isotopic composition for each assembly 
-\cite{peterson_additional_2017}. 
+\vspace{0.7em}
+\textbf{Motivation}
 
-This data is inputted into \Cyclus using the UDB reactor agent \cite{}. 
-\Cyclus is capable of tracking discrete isotopes and their time-dependent decay. 
-We can use these capabilities to more accurately study the dynamic loading 
-of a waste repository. 
+The goal of this work is to improve on the repository models 
+and use U.S. historical SNF inventory data in simulations 
+to more accurately study the loading of a waste repository. 
+
+These goals will be achieved by: 
+\begin{itemize}
+\item using UNF-ST$\&$DARDS \gls{UDB} \cite{peterson_unf_standards_2017} that has 
+\textbf{historic assembly-specific data} (e.g, isotopic composition, heat) in \Cyclus simulations 
+\item implementing a \textbf{more accurate thermal model} within a \Cyclus repository model 
+\end{itemize}
 
 \end{block}
 
@@ -149,19 +148,9 @@ of a waste repository.
 \begin{itemize}
         \item Create a \Cyclus spent fuel conditioning model that packages spent fuel 
         bundles into packages which have user-defined properties. 
-		\item Create a \Cyclus medium-fidelity repository Model that gives accurate 
+		\item Create a \Cyclus medium-fidelity repository model that gives accurate 
 		time and spatial dependent temperature values and loads the repository
 		based on a user-selected loading strategy. 
-\end{itemize}
-
-\end{alertblock}
-
-\setbeamercolor{block alerted title}{fg=black,bg=norange} % Change the alert block title colors
-\setbeamercolor{block alerted body}{fg=black,bg=white} % Change the alert block body colors
-\begin{alertblock}{Future Work }
-\begin{itemize}
-		\item Run \Cyclus simulations with U.S. historical SNF inventory data, the spent fuel conditioning 
-		and repository models to study how waste package acceptance strategies impact repository loading
 \end{itemize}
 
 \end{alertblock}
@@ -186,7 +175,7 @@ and the facilities interact with one another as independent \textit{agents}.
 The spent fuel conditioning model accepts spent fuel bundles and puts them into a cylindrical
 waste package. 
 	
-In the spent fuel conditioning model, the user can define the variables:  
+In the spent fuel conditioning model, the user can define variables:  
 
 For each layer, 
 \begin{itemize}
@@ -219,7 +208,7 @@ For each package,
 \begin{block}{Waste Repository Model}
 The waste repository model accepts waste packages and emplaces them into 
 available positions within the waste repository based on a thermal criteria.  
-The thermal criteria is a defined temperature limit at the interface between the waste 
+The thermal criteria is a temperature limit at the interface between the waste 
 package surface and the host geology, that is set based on the repository's host geology.
 
 \begin{table}[]
@@ -237,6 +226,7 @@ package surface and the host geology, that is set based on the repository's host
 
 In the waste repository model, the user can define the variables: 
 	\begin{itemize}
+		\item Capacity
 		\item Distance between waste packages
 		\item Distance between drifts 
 		\item Repository host geology 
@@ -246,10 +236,10 @@ In the waste repository model, the user can define the variables:
 \vspace{0.7em}
 \textbf{Thermal Model}
 
-At each time step, the waste repository model recalculates the temperature at each 
-location in the repository after the addition of new waste packages. 
+After the addition of new waste packages at each time step, the waste repository model 
+recalculates the temperature at each location in the repository. 
 If the addition of this new package causes its temperature to exceed the thermal 
-limit, it will be placed back into the buffer.  
+limit, it will be placed back into the buffer. 
 A thermal model that relies on a transient `outside' model and quasi-steady-state 
 `inside' model is used to accurately determine the temperature in the repository
 \cite{sutton_investigations_2011}. 
@@ -320,14 +310,15 @@ Figure \ref{fig:ebs_layers} illustrates an \gls{EBS} layout.
 \end{block}
 
 
-\begin{block}{Loading Strategies}
-Loading strategies that will be studied: 
+\setbeamercolor{block alerted title}{fg=black,bg=norange} % Change the alert block title colors
+\setbeamercolor{block alerted body}{fg=black,bg=white} % Change the alert block body colors
+\begin{alertblock}{Future Work }
 \begin{itemize}
-	\item First-in-first-out
-	\item Last-in-first-out
-	\item Load \gls{SNF} from shutdown sites first \cite{petersen_determining_2017}
+		\item Run \Cyclus simulations with U.S. historical SNF inventory data, the spent fuel conditioning 
+		and repository models to study how waste package acceptance strategies impact repository loading
 \end{itemize}
-\end{block}
+
+\end{alertblock}
 
 
 %----------------------------------------------------------------------------------------
@@ -350,7 +341,7 @@ Loading strategies that will be studied:
 %	CONTACT INFORMATION
 %----------------------------------------------------------------------------------------
 
-\setbeamercolor{block alerted title}{fg=black,bg=norange} % Change the alert block title colors
+\setbeamercolor{block alerted title}{fg=white,bg=dblue} % Change the alert block title colors
 \setbeamercolor{block alerted body}{fg=black,bg=white} % Change the alert block body colors
 
 \begin{alertblock}{Contact Information}
