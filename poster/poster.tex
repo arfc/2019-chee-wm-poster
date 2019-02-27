@@ -156,6 +156,16 @@ of a waste repository.
 
 \end{alertblock}
 
+\setbeamercolor{block alerted title}{fg=black,bg=norange} % Change the alert block title colors
+\setbeamercolor{block alerted body}{fg=black,bg=white} % Change the alert block body colors
+\begin{alertblock}{Future Work }
+\begin{itemize}
+		\item Run \Cyclus simulations with U.S. historical SNF inventory data, the spent fuel conditioning 
+		and repository models to study how waste package acceptance strategies impact repository loading
+\end{itemize}
+
+\end{alertblock}
+
 %----------------------------------------------------------------------------------------
 %	Cyclus
 %----------------------------------------------------------------------------------------
@@ -164,7 +174,7 @@ of a waste repository.
 \Cyclus is an agent-based extensible framework for modeling flow of material 
 through user-defined nuclear fuel cycles \cite{huff_fundamental_2016}. 
 In \Cyclus, each facility in the fuel cycle is modeled individually 
-and they interact with one another as independent \textit{agents}. 
+and the facilities interact with one another as independent \textit{agents}. 
 \begin{figure}
 	\includegraphics[width=0.9\linewidth]{Cyclus_graph}
 	\caption{\Cyclus API allows for modular build of simulations \cite{huff_fundamental_2016}}
@@ -209,7 +219,7 @@ For each package,
 \begin{block}{Waste Repository Model}
 The waste repository model accepts waste packages and emplaces them into 
 available positions within the waste repository based on a thermal criteria.  
-The thermal criteria is a defined temperature limit at the interface between waste 
+The thermal criteria is a defined temperature limit at the interface between the waste 
 package surface and the host geology, that is set based on the repository's host geology.
 
 \begin{table}[]
@@ -238,10 +248,10 @@ In the waste repository model, the user can define the variables:
 
 At each time step, the waste repository model recalculates the temperature at each 
 location in the repository after the addition of new waste packages. 
-If the addition of this new package results in its temperature being over the thermal 
+If the addition of this new package causes its temperature to exceed the thermal 
 limit, it will be placed back into the buffer.  
-To accurately determine the temperature in the repository, a thermal model that 
-relies on a transient `outside' model and quasi-steady-state `inside' model is used
+A thermal model that relies on a transient `outside' model and quasi-steady-state 
+`inside' model is used to accurately determine the temperature in the repository
 \cite{sutton_investigations_2011}. 
 
 \vspace{0.7em}
@@ -292,14 +302,14 @@ The neighboring drifts are represented by infinite line sources.
 \begin{column}{\onecolwid} % The third column
 
 \begin{block}{Waste Repository Model}
-\textbf{Quasi-steady-state `inside' model}
+\textbf{Quasi-Steady-State `Inside' Model}
 
-The `inside' model is considered to be at a quasi-steady-state condition since there is 
-relatively low thermal mass of \gls{EBS} compared to the infinite geologic medium 
+The `inside' model is considered to be at a quasi-steady-state condition because \gls{EBS}
+has a relatively low thermal mass compared to the infinite geologic medium 
 \cite{sutton_investigations_2011}. 
 The steady state calculation is performed at each time step with the heat source and 
 interface temperature as boundary conditions. 
-Figure \ref{fig:ebs_layers} shows an example of an \gls{EBS} layout.
+Figure \ref{fig:ebs_layers} illustrates an \gls{EBS} layout.
 
 \begin{figure}
 	\label{fig:ebs_layers}
